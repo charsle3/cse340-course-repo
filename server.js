@@ -46,7 +46,7 @@ app.get('/projects', async (req, res) => {
 });
 
 app.get('/categories', async (req, res) => {
-    const title = 'Service Projects';
+    const title = 'Service Project Categories';
     res.render('categories', { title });
 });
 
