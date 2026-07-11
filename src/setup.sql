@@ -69,7 +69,7 @@ CREATE TABLE categories (
 -- Insert sample data: Service Projects Categories
 -- ========================================
 
-INSERT INTO projects (name)
+INSERT INTO categories (name)
 VALUES
 ('Educational'),
 ('Community Service'),
