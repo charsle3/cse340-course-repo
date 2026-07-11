@@ -55,3 +55,41 @@ VALUES
 (3, 'School Supply Drive', 'Collect backpacks, notebooks, and classroom supplies for students and teachers in underserved communities.', 'Albert Elementary School', '04-11-2023'),
 (3, 'Community Meal Service', 'Prepare and distribute nutritious meals to individuals experiencing homelessness or food insecurity.', '666 Jack Drive', '04-11-2023'),
 (3, 'Kindness in Action Week', 'Host a week of daily service projects including blood drives, clothing donations, literacy tutoring, park beautification, and care package assembly.', 'Charity Grace Community Park', '04-11-2023');
+
+-- ========================================
+-- Service Projects Categories Table
+-- ========================================
+
+CREATE TABLE categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL
+);
+
+-- ========================================
+-- Insert sample data: Service Projects Categories
+-- ========================================
+
+INSERT INTO projects (name)
+VALUES
+('Educational'),
+('Community Service'),
+('Health and Wellness')
+
+-- ========================================
+-- Modify projects table to associate projects with categories
+-- ========================================
+
+ALTER TABLE projects 
+ADD COLUMN category_id INT REFERENCES categories(category_id);
+
+-- ========================================
+-- Associate projects with categories
+-- ========================================
+
+UPDATE projects 
+SET category_id = CASE organization_id
+    WHEN 1 THEN 2
+    WHEN 2 THEN 1
+    WHEN 3 THEN 3
+END
+WHERE organization_id IN (1, 2, 3);
