@@ -4,7 +4,7 @@
     <h2>Upcoming Service Projects</h2>
     <ul>
         <% projects.forEach(project => { %>
-            <li><strong><%= project.date %></strong>: <%= project.title %> <em><%= project.name %></em></li>
+            <li><a href="/projects/<%= project.project_id %>"><%= project.title %></a</li>
         <% }); %>
     </ul>
 </main>
