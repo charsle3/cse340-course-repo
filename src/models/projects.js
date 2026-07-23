@@ -87,22 +87,44 @@ const getProjectsByOrganizationId = async (organizationId) => {
 const getProjectsByCategoryID = async (category_id) => {
       const query = `
         SELECT
-          project_id,
-          organization_id,
-          title,
-          description,
-          location,
-          date,
-          category_id
-        FROM projects
-        WHERE category_id = ${category_id}
+          p.project_id,
+          p.organization_id,
+          p.title,
+          p.description,
+          p.location,
+          p.date
+        FROM projects AS p
+        JOIN project_category AS pc
+          ON p.project_id = pc.project_id
+        WHERE pc.category_id = $1
         ORDER BY date;
       `;
 
-    const result = await db.query(query);
+    const queryParams = [category_id];
+    const result = await db.query(query, queryParams);
 
     return result.rows;
 }
 
+const createProject = async (title, description, location, date, organizationId) => {
+    const query = `
+      INSERT INTO projects (title, description, location, date, organization_id)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING project_id;
+    `;
 
-export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, getProjectsByCategoryID };
+    const queryParams = [title, description, location, date, organizationId];
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create project');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new project with ID:', result.rows[0].project_id);
+    }
+
+    return result.rows[0].project_id;
+}
+
+export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, getProjectsByCategoryID, createProject };

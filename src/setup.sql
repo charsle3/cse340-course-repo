@@ -82,6 +82,14 @@ VALUES
 ALTER TABLE projects 
 ADD COLUMN category_id INT REFERENCES categories(category_id);
 
+CREATE TABLE project_category (
+project_id INT,
+category_id INT,
+PRIMARY KEY (project_id, category_id),
+FOREIGN KEY (project_id) REFERENCES projects(project_id),
+FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+
 -- ========================================
 -- Associate projects with categories
 -- ========================================
@@ -93,3 +101,23 @@ SET category_id = CASE organization_id
     WHEN 3 THEN 3
 END
 WHERE organization_id IN (1, 2, 3);
+
+INSERT INTO project_category (project_id, category_id)
+VALUES
+(1, 1),
+(3, 2),
+(4, 2),
+(5, 2),
+(6, 2),
+(7, 2),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(13, 3),
+(14, 3),
+(15, 3),
+(16, 3),
+(17, 3),
+(18, 1)
