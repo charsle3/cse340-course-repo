@@ -14,7 +14,7 @@ const categoryValidation = [
     body('name')
         .trim()
         .notEmpty().withMessage('Name is required')
-        .isLength({ min: 3, max: 100 }).withMessage('Name must be between 3 and 200 characters'),
+        .isLength({ min: 3, max: 100 }).withMessage('Name must be between 3 and 100 characters'),
 ];
 
 // Define any controller functions
