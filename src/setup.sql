@@ -79,9 +79,6 @@ VALUES
 -- Modify projects table to associate projects with categories
 -- ========================================
 
-ALTER TABLE projects 
-ADD COLUMN category_id INT REFERENCES categories(category_id);
-
 CREATE TABLE project_category (
 project_id INT,
 category_id INT,
@@ -93,14 +90,6 @@ FOREIGN KEY (category_id) REFERENCES categories(category_id)
 -- ========================================
 -- Associate projects with categories
 -- ========================================
-
-UPDATE projects 
-SET category_id = CASE organization_id
-    WHEN 1 THEN 2
-    WHEN 2 THEN 1
-    WHEN 3 THEN 3
-END
-WHERE organization_id IN (1, 2, 3);
 
 INSERT INTO project_category (project_id, category_id)
 VALUES
@@ -118,6 +107,4 @@ VALUES
 (13, 3),
 (14, 3),
 (15, 3),
-(16, 3),
-(17, 3),
-(18, 1)
+(16, 3)
