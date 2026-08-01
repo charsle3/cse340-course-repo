@@ -25,7 +25,7 @@ const createUser = async (name, email, passwordHash) => {
 
 const findUserByEmail = async (email) => {
     const query = `
-        SELECT u.user_id, u.email, u.password_hash, r.role_name 
+        SELECT u.user_id, u.name, u.email, u.password_hash, r.role_name 
         FROM users u
         JOIN roles r ON u.role_id = r.role_id
         WHERE u.email = $1
@@ -40,6 +40,26 @@ const findUserByEmail = async (email) => {
     }
     
     return result.rows[0];
+};
+
+const getAllUsers = async () => {
+    const query = `
+        SELECT u.user_id, u.name, u.email, r.role_name, r.role_description
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+    `;
+    
+    const result = await db.query(query);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to fetch users');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Successfully fetched users: ', result.rows);
+    }
+    
+    return result.rows;
 };
 
 const verifyPassword = async (password, passwordHash) => {
@@ -64,4 +84,4 @@ const authenticateUser =async (email, password) => {
     }
 }
 
-export { createUser, authenticateUser };
+export { createUser, authenticateUser, getAllUsers };
