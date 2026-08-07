@@ -17,7 +17,9 @@ import {
     processNewProjectForm, 
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    addUser,
+    removeUser
     } from './controllers/projects.js';
 import { 
     showCategoriesPage, 
@@ -105,6 +107,10 @@ router.get('/dashboard', requireLogin, showDashboard);
 
 // Protected registered users route
 router.get('/registered-users', requireRole('admin'), showRegisteredUsers);
+
+// Add and Remove User from Projects
+router.get('/add-user/:id', requireLogin, addUser);
+router.get('/remove-user/:id', requireLogin, removeUser);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

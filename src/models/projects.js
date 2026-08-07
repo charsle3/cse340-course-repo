@@ -106,6 +106,47 @@ const getProjectsByCategoryID = async (category_id) => {
     return result.rows;
 }
 
+const getProjectsByUserID = async (user_id) => {
+      const query = `
+        SELECT
+          p.project_id,
+          p.organization_id,
+          p.title,
+          p.description,
+          p.location,
+          p.date
+        FROM projects AS p
+        JOIN user_project AS up
+          ON p.project_id = up.project_id
+        WHERE up.user_id = $1
+        ORDER BY date;
+      `;
+
+    const queryParams = [user_id];
+    const result = await db.query(query, queryParams);
+
+    return result.rows;
+}
+
+const assignUserToProject = async(projectId, user_id) => {
+    const query = `
+        INSERT INTO user_project (project_id, user_id)
+        VALUES ($1, $2);
+    `;
+
+    await db.query(query, [projectId, user_id]);
+}
+
+const removeUserFromProject = async(projectId, user_id) => {
+    // First, remove existing category assignments for the project
+    const deleteQuery = `
+        DELETE FROM user_project
+        WHERE project_id = $1
+          AND user_id = $2;
+    `;
+    await db.query(deleteQuery, [projectId, user_id]);
+};
+
 const createProject = async (title, description, location, date, organizationId) => {
     const query = `
       INSERT INTO projects (title, description, location, date, organization_id)
@@ -155,5 +196,8 @@ export {
   getProjectDetails, 
   getProjectsByCategoryID, 
   createProject, 
-  updateProject 
+  updateProject,
+  getProjectsByUserID,
+  assignUserToProject,
+  removeUserFromProject
 };

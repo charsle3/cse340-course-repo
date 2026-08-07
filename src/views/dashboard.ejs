@@ -7,6 +7,16 @@
     <p>Name: <%= name %></p>
     <p>Username: <%= email %></p>
 
+    <h2>Confirmed Service Projects</h2>
+    <ul>
+        <% projects.forEach(project => { %>
+            <li>
+                <a href="/project/<%= project.project_id %>"><%= project.title %></a>
+                <a href="/remove-user/<%= project.project_id %>">Cancel Participation</a>
+            </li>
+        <% }); %>
+    </ul>
+
     <p>
         <% if (user && user.role_name === 'admin') { %>
             <a href="/registered-users">List of Registered Users</a>

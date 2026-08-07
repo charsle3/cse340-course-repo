@@ -5,7 +5,10 @@ import {
     getUpcomingProjects, 
     getProjectDetails, 
     createProject, 
-    updateProject 
+    updateProject,
+    getProjectsByUserID,
+    assignUserToProject,
+    removeUserFromProject
 } from '../models/projects.js';
 import { getCategoriesByProjectID } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
@@ -47,8 +50,22 @@ const showProjectDetailsPage = async (req, res) => {
     const categories = await getCategoriesByProjectID(id);
     const project = await getProjectDetails(id);
     const title = 'Upcoming Service Project';
+    
+    const user = req.session.user;
+    let volunteered = false;
 
-    res.render('project', { title, project, categories });
+    if (user) {
+        const user_id = user.user_id;
+        const userProjects = await getProjectsByUserID(user_id);
+
+        userProjects.forEach(userProject => {
+            if (userProject.project_id === project.project_id) {
+                volunteered = true;
+            }
+        });
+    }
+
+    res.render('project', { title, project, categories, volunteered });
 };  
 
 const showNewProjectForm = async (req, res) => {
@@ -120,6 +137,30 @@ const processEditProjectForm = async (req, res) => {
     res.redirect(`/project/${project_id}`);
 };
 
+const addUser = async (req, res) => {
+    const project_id = req.params.id;
+    const user = req.session.user;
+    const user_id = user.user_id;
+
+    await assignUserToProject(project_id, user_id);
+
+    req.flash('success', 'Volunteering Successful!');
+
+    res.redirect(`/project/${project_id}`);
+}
+
+const removeUser = async (req, res) => {
+    const project_id = req.params.id;
+    const user = req.session.user;
+    const user_id = user.user_id;
+
+    await removeUserFromProject(project_id, user_id);
+
+    req.flash('success', 'Participation Updated!');
+
+    res.redirect(`/project/${project_id}`);
+}
+
 // Export any controller functions
 export { 
     showProjectsPage, 
@@ -128,5 +169,7 @@ export {
     processNewProjectForm, 
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm 
+    processEditProjectForm,
+    addUser,
+    removeUser
 };

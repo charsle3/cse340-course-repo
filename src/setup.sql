@@ -141,12 +141,26 @@ CREATE TABLE users (
 );
 
 -- ========================================
--- Placeholder
+-- Create users_projects table
 -- ========================================
 
+CREATE TABLE user_project (
+project_id INT,
+user_id INT,
+PRIMARY KEY (project_id, user_id),
+FOREIGN KEY (project_id) REFERENCES projects(project_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
 -- ========================================
--- Placeholder
+-- Insert sample info into user_project
 -- ========================================
+
+INSERT INTO user_project (project_id, user_id)
+VALUES
+(1, 4),
+(3, 5),
+(4, 6)
 
 -- ========================================
 -- Placeholder

@@ -12,12 +12,20 @@
     <h3>Project Categories:</h3>
     <ul>
         <% categories.forEach(category => { %>
-            <li><a href="/category/<%= category.category_id %>"><%= category.name %></a</li>
+            <li><a href="/category/<%= category.category_id %>"><%= category.name %></a></li>
         <% }); %>
     </ul>
 
     <p></p>
 
+    <% if (user && !volunteered) { %>
+        <a href="/add-user/<%= project.project_id %>">Volunteer for Project</a>
+    <% } %>
+
+    <% if (user && volunteered) { %>
+        <span>You have volunteered for this project! </span>
+        <a href="/remove-user/<%= project.project_id %>">Cancel Participation</a>
+    <% } %>
     
     <% if (user && user.role_name === 'admin') { %>
         <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
